@@ -1,0 +1,122 @@
+POST http://localhost:3000/api/courses
+Content-Type: application/json
+
+{
+  "title": "English Beginner",
+  "description": "A course for students starting to learn English.",
+  "language": "English",
+  "level": "A1"
+}
+
+###
+
+GET http://localhost:3000/api/courses
+
+###
+
+GET http://localhost:3000/api/courses/6ac7b6fae5e35289d6129c4c
+
+###
+
+POST http://localhost:3000/api/courses
+Content-Type: application/json
+
+{
+  "title": "A",
+  "description": "Hi",
+  "language": "English",
+  "level": "D5"
+}
+###
+
+POST http://localhost:3000/api/courses
+Content-Type: application/json
+
+{
+  "title": "A",
+  "description": "Hi",
+  "language": "English",
+  "level": "D5"
+}
+###
+
+GET http://localhost:3000/api/courses/000000000000000000000000
+###
+
+DELETE http://localhost:3000/api/courses/6ac7b5cd0d04a14240512a20
+###
+
+GET http://localhost:3000/api/courses
+###
+
+DELETE http://localhost:3000/api/courses/6ac7b5cd0d04a14240512a20
+###
+
+POST http://localhost:3000/api/courses
+Content-Type: application/json
+
+{
+  "title": "Spanish Beginner",
+  "description": "A beginner course for learning Spanish.",
+  "language": "Spanish",
+  "level": "A1"
+}
+###
+
+PUT http://localhost:3000/api/courses/6ac7b8a8e5e35289d6129c4e
+Content-Type: application/json
+
+{
+  "title": "Spanish Beginner Updated",
+  "description": "An updated beginner course for learning Spanish.",
+  "language": "Spanish",
+  "level": "A2"
+}
+###
+
+PUT http://localhost:3000/api/courses/000000000000000000000000
+Content-Type: application/json
+
+{
+  "title": "French Beginner",
+  "description": "A beginner course for learning French.",
+  "language": "French",
+  "level": "A1"
+}
+###
+
+PUT http://localhost:3000/api/courses/6ac7b8a8e5e35289d6129c4c
+Content-Type: application/json
+
+{
+  "title": "A",
+  "description": "Hi",
+  "language": "Spanish",
+  "level": "D5"
+}
+###
+
+GET http://localhost:3000/api/lessons
+###
+
+POST http://localhost:3000/api/lessons
+Content-Type: application/json
+
+{
+  "title": "Basic Spanish Greetings",
+  "content": "In this lesson students learn common Spanish greetings and introductions.",
+  "courseId": "6ac7b87be5e35289d6129c4d"
+}
+###
+
+GET http://localhost:3000/api/courses
+###
+
+GET http://localhost:3000/api/lessons/6ac7bb56634df718d991aed5
+###
+
+GET http://localhost:3000/api/courses?language=Spanish
+
+###
+
+GET http://localhost:3000/api/courses?level=A2

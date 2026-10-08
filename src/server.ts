@@ -1,10 +1,14 @@
 import express from "express";
 import "dotenv/config";
 import connectDB from "./config/database";
+import courseRoutes from "./routes/course.routes";
+import lessonRoutes from "./routes/lesson.routes";
 
 const app = express();
 
 app.use(express.json());
+app.use("/api/courses", courseRoutes);
+app.use("/api/lessons", lessonRoutes);
 
 app.get("/", (req, res) => {
     res.json({
