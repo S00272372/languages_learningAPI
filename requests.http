@@ -1,57 +1,4 @@
-POST http://localhost:3000/api/courses
-Content-Type: application/json
-
-{
-  "title": "English Beginner",
-  "description": "A course for students starting to learn English.",
-  "language": "English",
-  "level": "A1"
-}
-
-###
-
-GET http://localhost:3000/api/courses
-
-###
-
-GET http://localhost:3000/api/courses/6ac7b6fae5e35289d6129c4c
-
-###
-
-POST http://localhost:3000/api/courses
-Content-Type: application/json
-
-{
-  "title": "A",
-  "description": "Hi",
-  "language": "English",
-  "level": "D5"
-}
-###
-
-POST http://localhost:3000/api/courses
-Content-Type: application/json
-
-{
-  "title": "A",
-  "description": "Hi",
-  "language": "English",
-  "level": "D5"
-}
-###
-
-GET http://localhost:3000/api/courses/000000000000000000000000
-###
-
-DELETE http://localhost:3000/api/courses/6ac7b5cd0d04a14240512a20
-###
-
-GET http://localhost:3000/api/courses
-###
-
-DELETE http://localhost:3000/api/courses/6ac7b5cd0d04a14240512a20
-###
-
+### 1. POST - Create course
 POST http://localhost:3000/api/courses
 Content-Type: application/json
 
@@ -61,9 +8,39 @@ Content-Type: application/json
   "language": "Spanish",
   "level": "A1"
 }
+
 ###
 
-PUT http://localhost:3000/api/courses/6ac7b8a8e5e35289d6129c4e
+### 2. POST - Invalid data
+POST http://localhost:3000/api/courses
+Content-Type: application/json
+
+{
+  "title": "A",
+  "description": "Hi",
+  "language": "Spanish",
+  "level": "D5"
+}
+
+###
+
+### 3. GET - All courses
+GET http://localhost:3000/api/courses
+
+###
+
+### 4. GET - Existing course
+GET http://localhost:3000/api/courses/6ac7f9e2a5d30522dabbef6c
+
+###
+
+### 5. GET - Missing course
+GET http://localhost:3000/api/courses/000000000000000000000000
+
+###
+
+### 6. PUT - Update existing course
+PUT http://localhost:3000/api/courses/6ac7f9e2a5d30522dabbef6c
 Content-Type: application/json
 
 {
@@ -72,8 +49,10 @@ Content-Type: application/json
   "language": "Spanish",
   "level": "A2"
 }
+
 ###
 
+### 7. PUT - Missing course
 PUT http://localhost:3000/api/courses/000000000000000000000000
 Content-Type: application/json
 
@@ -83,9 +62,11 @@ Content-Type: application/json
   "language": "French",
   "level": "A1"
 }
+
 ###
 
-PUT http://localhost:3000/api/courses/6ac7b8a8e5e35289d6129c4c
+### 8. PUT - Invalid data
+PUT http://localhost:3000/api/courses/6ac7f9e2a5d30522dabbef6c
 Content-Type: application/json
 
 {
@@ -94,29 +75,53 @@ Content-Type: application/json
   "language": "Spanish",
   "level": "D5"
 }
+
 ###
 
+### 9. DELETE - Existing course
+DELETE http://localhost:3000/api/courses/6ac7f9e2a5d30522dabbef6c
+
+###
+
+### 10. DELETE - Missing course
+DELETE http://localhost:3000/api/courses/000000000000000000000000
+
+###
+
+### 11. GET - Filter by language
+GET http://localhost:3000/api/courses?language=Spanish
+
+###
+
+### 12. GET - Filter by level
+GET http://localhost:3000/api/courses?level=A2
+
+
+### =========================
+### LESSONS
+### =========================
+
+### 13. GET - All lessons
 GET http://localhost:3000/api/lessons
+
 ###
 
+### 14. POST - Create lesson
 POST http://localhost:3000/api/lessons
 Content-Type: application/json
 
 {
   "title": "Basic Spanish Greetings",
   "content": "In this lesson students learn common Spanish greetings and introductions.",
-  "courseId": "6ac7b87be5e35289d6129c4d"
+  "courseId": "6ac7f9e2a5d30522dabbef6c"
 }
-###
-
-GET http://localhost:3000/api/courses
-###
-
-GET http://localhost:3000/api/lessons/6ac7bb56634df718d991aed5
-###
-
-GET http://localhost:3000/api/courses?language=Spanish
 
 ###
 
-GET http://localhost:3000/api/courses?level=A2
+### 15. GET - Existing lesson
+GET http://localhost:3000/api/lessons/6ac7faeba5d30522dabbef6e
+
+###
+
+### 16. GET - Lessons by course
+GET http://localhost:3000/api/lessons?courseId=6ac7f9e2a5d30522dabbef6c
