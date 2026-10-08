@@ -5,6 +5,28 @@ import Course from "../models/course.model";
 import { lessonSchema } from "../schemas/lesson.schema";
 
 // GET /api/lessons
+/**
+ * @openapi
+ * /api/lessons:
+ *   get:
+ *     summary: Get all lessons
+ *     tags:
+ *       - Lessons
+ *     parameters:
+ *       - in: query
+ *         name: courseId
+ *         required: false
+ *         schema:
+ *           type: string
+ *         description: Filter lessons by course ID
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved lessons
+ *       400:
+ *         description: Invalid course ID
+ *       500:
+ *         description: Internal server error
+ */
 export const getLessons = async (
     req: Request,
     res: Response
@@ -39,6 +61,31 @@ export const getLessons = async (
 };
 
 // GET /api/lessons/:id
+
+/**
+ * @openapi
+ * /api/lessons/{id}:
+ *   get:
+ *     summary: Get a lesson by ID
+ *     tags:
+ *       - Lessons
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the lesson
+ *     responses:
+ *       200:
+ *         description: Lesson found
+ *       400:
+ *         description: Invalid lesson ID
+ *       404:
+ *         description: Lesson not found
+ *       500:
+ *         description: Internal server error
+ */
 export const getLessonById = async (
     req: Request,
     res: Response
@@ -73,6 +120,44 @@ export const getLessonById = async (
 };
 
 // POST /api/lessons
+
+/**
+ * @openapi
+ * /api/lessons:
+ *   post:
+ *     summary: Create a new lesson
+ *     tags:
+ *       - Lessons
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *               - content
+ *               - courseId
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 example: Basic Spanish Greetings
+ *               content:
+ *                 type: string
+ *                 example: In this lesson students learn common Spanish greetings and introductions.
+ *               courseId:
+ *                 type: string
+ *                 example: 6ac7e5010a5d34f3a520cf0e
+ *     responses:
+ *       201:
+ *         description: Lesson created successfully
+ *       400:
+ *         description: Validation failed
+ *       404:
+ *         description: Course not found
+ *       500:
+ *         description: Internal server error
+ */
 export const createLesson = async (
     req: Request,
     res: Response
@@ -113,6 +198,51 @@ export const createLesson = async (
 };
 
 // PUT /api/lessons/:id
+
+/**
+ * @openapi
+ * /api/lessons/{id}:
+ *   put:
+ *     summary: Update a lesson
+ *     tags:
+ *       - Lessons
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the lesson
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *               - content
+ *               - courseId
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 example: Updated Spanish Greetings
+ *               content:
+ *                 type: string
+ *                 example: Updated content for the Spanish greetings lesson.
+ *               courseId:
+ *                 type: string
+ *                 example: 6ac7e5010a5d34f3a520cf0e
+ *     responses:
+ *       200:
+ *         description: Lesson updated successfully
+ *       400:
+ *         description: Invalid lesson ID or validation failed
+ *       404:
+ *         description: Lesson or course not found
+ *       500:
+ *         description: Internal server error
+ */
 export const updateLesson = async (
     req: Request,
     res: Response
@@ -153,7 +283,7 @@ export const updateLesson = async (
                 courseId: new mongoose.Types.ObjectId(validation.data.courseId)
             },
             {
-                new: true,
+                returnDocument: "after",
                 runValidators: true
             }
         );
@@ -176,6 +306,31 @@ export const updateLesson = async (
 };
 
 // DELETE /api/lessons/:id
+
+/**
+ * @openapi
+ * /api/lessons/{id}:
+ *   delete:
+ *     summary: Delete a lesson
+ *     tags:
+ *       - Lessons
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the lesson
+ *     responses:
+ *       200:
+ *         description: Lesson deleted successfully
+ *       400:
+ *         description: Invalid lesson ID
+ *       404:
+ *         description: Lesson not found
+ *       500:
+ *         description: Internal server error
+ */
 export const deleteLesson = async (
     req: Request,
     res: Response
