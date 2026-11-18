@@ -34,13 +34,6 @@ export const getLessons = async (
 ): Promise<void> => {
     const { courseId } = req.query;
 
-    if (typeof courseId === "string" && !mongoose.isValidObjectId(courseId)) {
-        res.status(400).json({
-            message: "Invalid course ID"
-        });
-        return;
-    }
-
     const lessons = await lessonService.getAllLessons(
         typeof courseId === "string" ? courseId : undefined
     );
@@ -79,13 +72,6 @@ export const getLessonById = async (
     res: Response
 ): Promise<void> => {
     const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
-
-    if (!mongoose.isValidObjectId(id)) {
-        res.status(400).json({
-            message: "Invalid lesson ID"
-        });
-        return;
-    }
 
     const lesson = await lessonService.getLessonById(id);
 
@@ -135,17 +121,7 @@ export const createLesson = async (
     req: Request,
     res: Response
 ): Promise<void> => {
-    const validation = lessonSchema.safeParse(req.body);
-
-    if (!validation.success) {
-        res.status(400).json({
-            message: "Validation failed",
-            errors: validation.error.issues
-        });
-        return;
-    }
-
-    const lesson = await lessonService.createLesson(validation.data);
+    const lesson = await lessonService.createLesson(req.body);
 
     res.status(201).json(lesson);
 };
@@ -202,24 +178,7 @@ export const updateLesson = async (
 ): Promise<void> => {
     const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
 
-    if (!mongoose.isValidObjectId(id)) {
-        res.status(400).json({
-            message: "Invalid lesson ID"
-        });
-        return;
-    }
-
-    const validation = lessonSchema.safeParse(req.body);
-
-    if (!validation.success) {
-        res.status(400).json({
-            message: "Validation failed",
-            errors: validation.error.issues
-        });
-        return;
-    }
-
-    const lesson = await lessonService.updateLesson(id, validation.data);
+    const lesson = await lessonService.updateLesson(id, req.body);
 
     res.status(200).json(lesson);
 };
@@ -255,13 +214,6 @@ export const deleteLesson = async (
     res: Response
 ): Promise<void> => {
     const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
-
-    if (!mongoose.isValidObjectId(id)) {
-        res.status(400).json({
-            message: "Invalid lesson ID"
-        });
-        return;
-    }
 
     await lessonService.deleteLesson(id);
 

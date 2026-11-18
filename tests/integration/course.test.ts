@@ -1,6 +1,6 @@
 import { describe, it, expect, afterAll } from "vitest";
 import request from "supertest";
-
+import Lesson from "../../src/models/lesson.model";
 import app from "../../src/app";
 import Course from "../../src/models/course.model";
 
@@ -129,6 +129,34 @@ describe("Course API", () => {
         expect(response.body.message).toBe(
             "Course deleted successfully"
         );
+    });
+        it("DELETE /api/courses/:id should also delete the lessons of that course", async () => {
+        const courseResponse = await request(app)
+            .post("/api/courses")
+            .send({
+                title: "Course With Lessons",
+                description: "Course used to test deleting lessons.",
+                language: "Italian",
+                level: "A1"
+            });
+
+        const parentId = courseResponse.body._id;
+
+        await request(app)
+            .post("/api/lessons")
+            .send({
+                title: "Lesson In Course",
+                content: "This lesson should be deleted with its course.",
+                courseId: parentId
+            });
+
+        const response = await request(app)
+            .delete(`/api/courses/${parentId}`);
+
+        expect(response.status).toBe(200);
+
+        const remainingLessons = await Lesson.find({ courseId: parentId });
+        expect(remainingLessons).toHaveLength(0);
     });
 
     it("DELETE /api/courses/:id should return 404 for missing course", async () => {

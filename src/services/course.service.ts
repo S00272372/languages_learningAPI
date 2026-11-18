@@ -1,6 +1,7 @@
 import Course, { ICourse } from '../models/course.model';
 import { NotFoundError } from '../apperrors';
 import { CourseInput } from '../schemas/course.schema';
+import Lesson from '../models/lesson.model';
 
 export class CourseService {
   async getAllCourses(language?: string, level?: string): Promise<ICourse[]> {
@@ -40,10 +41,11 @@ export class CourseService {
 
     return course;
   }
-
   async deleteCourse(id: string): Promise<void> {
     const course = await Course.findByIdAndDelete(id);
 
     if (!course) throw new NotFoundError('Course');
+
+    await Lesson.deleteMany({ courseId: id });
   }
 }

@@ -10,6 +10,7 @@ const courseService = new CourseService();
  * /api/courses:
  *   get:
  *     summary: Get all courses
+ *     description: Returns all courses, newest first. Use the language and level query parameters to filter the list. Both filters can be combined.
  *     tags:
  *       - Courses
  *     parameters:
@@ -73,13 +74,6 @@ export const getCourses = async (req: Request, res: Response): Promise<void> => 
 export const getCourseById = async (req: Request, res: Response): Promise<void> => {
     const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
 
-    if (!mongoose.isValidObjectId(id)) {
-        res.status(400).json({
-            message: "Invalid course ID"
-        });
-        return;
-    }
-
     const course = await courseService.getCourseById(id);
 
     res.status(200).json(course);
@@ -129,17 +123,7 @@ export const getCourseById = async (req: Request, res: Response): Promise<void> 
  */
 
 export const createCourse = async (req: Request, res: Response): Promise<void> => {
-    const validation = courseSchema.safeParse(req.body);
-
-    if (!validation.success) {
-        res.status(400).json({
-            message: "Validation failed",
-            errors: validation.error.issues
-        });
-        return;
-    }
-
-    const course = await courseService.createCourse(validation.data);
+    const course = await courseService.createCourse(req.body);
 
     res.status(201).json(course);
 };
@@ -198,35 +182,17 @@ export const createCourse = async (req: Request, res: Response): Promise<void> =
 export const updateCourse = async (req: Request, res: Response): Promise<void> => {
     const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
 
-    if (!mongoose.isValidObjectId(id)) {
-        res.status(400).json({
-            message: "Invalid course ID"
-        });
-        return;
-    }
-
-    const validation = courseSchema.safeParse(req.body);
-
-    if (!validation.success) {
-        res.status(400).json({
-            message: "Validation failed",
-            errors: validation.error.issues
-        });
-        return;
-    }
-
-    const course = await courseService.updateCourse(id, validation.data);
+    const course = await courseService.updateCourse(id, req.body);
 
     res.status(200).json(course);
 };
-
 // DELETE /api/courses/:id
 
 /**
  * @openapi
  * /api/courses/{id}:
  *   delete:
- *     summary: Delete a course
+ *     summary: Delete a course and all of its lessons
  *     tags:
  *       - Courses
  *     parameters:
@@ -238,7 +204,7 @@ export const updateCourse = async (req: Request, res: Response): Promise<void> =
  *         description: The ID of the course
  *     responses:
  *       200:
- *         description: Course deleted successfully
+ *          description: Course and its lessons deleted successfully
  *       400:
  *         description: Invalid course ID
  *       404:
@@ -248,13 +214,6 @@ export const updateCourse = async (req: Request, res: Response): Promise<void> =
  */
 export const deleteCourse = async (req: Request, res: Response): Promise<void> => {
     const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
-
-    if (!mongoose.isValidObjectId(id)) {
-        res.status(400).json({
-            message: "Invalid course ID"
-        });
-        return;
-    }
 
     await courseService.deleteCourse(id);
 
