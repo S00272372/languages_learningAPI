@@ -20,3 +20,26 @@ export const lessonSchema = z.object({
 });
 
 export type LessonInput = z.infer<typeof lessonSchema>;
+
+export const createLessonZSchema = z.object({
+    body: lessonSchema
+});
+
+export const updateLessonZSchema = z.object({
+    params: z.object({
+        id: z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid ObjectId")
+    }),
+    body: lessonSchema
+});
+
+export const lessonParamsSchema = z.object({
+    params: z.object({
+        id: z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid ObjectId")
+    })
+});
+
+export const lessonQuerySchema = z.object({
+    query: z.object({
+        courseId: z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid ObjectId").optional()
+    })
+});

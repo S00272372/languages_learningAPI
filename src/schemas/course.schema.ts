@@ -20,3 +20,20 @@ export const courseSchema = z.object({
 });
 
 export type CourseInput = z.infer<typeof courseSchema>;  
+
+export const createCourseZSchema = z.object({
+    body: courseSchema
+});
+
+export const updateCourseZSchema = z.object({
+    params: z.object({
+        id: z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid ObjectId")
+    }),
+    body: courseSchema
+});
+
+export const courseParamsSchema = z.object({
+    params: z.object({
+        id: z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid ObjectId")
+    })
+});

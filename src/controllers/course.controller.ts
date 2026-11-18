@@ -35,21 +35,14 @@ const courseService = new CourseService();
 
 // GET /api/courses
 export const getCourses = async (req: Request, res: Response): Promise<void> => {
-    try {
-        const { language, level } = req.query;
+    const { language, level } = req.query;
 
-                const courses = await courseService.getAllCourses(
-            typeof language === "string" ? language : undefined,
-            typeof level === "string" ? level : undefined
-        );
+    const courses = await courseService.getAllCourses(
+        typeof language === "string" ? language : undefined,
+        typeof level === "string" ? level : undefined
+    );
 
-        res.status(200).json(courses);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            message: "Failed to fetch courses"
-        });
-    }
+    res.status(200).json(courses);
 };
 
 // GET /api/courses/:id
@@ -78,32 +71,18 @@ export const getCourses = async (req: Request, res: Response): Promise<void> => 
  *         description: Internal server error
  */
 export const getCourseById = async (req: Request, res: Response): Promise<void> => {
-    try {
-        const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+    const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
 
-        if (!mongoose.isValidObjectId(id)) {
-            res.status(400).json({
-                message: "Invalid course ID"
-            });
-            return;
-        }
-
-        const course = await courseService.getCourseById(id);
-
-        if (!course) {
-            res.status(404).json({
-                message: "Course not found"
-            });
-            return;
-        }
-
-        res.status(200).json(course);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            message: "Failed to fetch course"
+    if (!mongoose.isValidObjectId(id)) {
+        res.status(400).json({
+            message: "Invalid course ID"
         });
+        return;
     }
+
+    const course = await courseService.getCourseById(id);
+
+    res.status(200).json(course);
 };
 
 // POST /api/courses
@@ -150,26 +129,19 @@ export const getCourseById = async (req: Request, res: Response): Promise<void> 
  */
 
 export const createCourse = async (req: Request, res: Response): Promise<void> => {
-    try {
-        const validation = courseSchema.safeParse(req.body);
+    const validation = courseSchema.safeParse(req.body);
 
-        if (!validation.success) {
-            res.status(400).json({
-                message: "Validation failed",
-                errors: validation.error.issues
-            });
-            return;
-        }
-
-            const course = await courseService.createCourse(validation.data);
-
-        res.status(201).json(course);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            message: "Failed to create course"
+    if (!validation.success) {
+        res.status(400).json({
+            message: "Validation failed",
+            errors: validation.error.issues
         });
+        return;
     }
+
+    const course = await courseService.createCourse(validation.data);
+
+    res.status(201).json(course);
 };
 
 // PUT /api/courses/:id
@@ -224,42 +196,28 @@ export const createCourse = async (req: Request, res: Response): Promise<void> =
  *         description: Internal server error
  */
 export const updateCourse = async (req: Request, res: Response): Promise<void> => {
-    try {
-                const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+    const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
 
-        if (!mongoose.isValidObjectId(id)) {
-            res.status(400).json({
-                message: "Invalid course ID"
-            });
-            return;
-        }
-
-        const validation = courseSchema.safeParse(req.body);
-
-        if (!validation.success) {
-            res.status(400).json({
-                message: "Validation failed",
-                errors: validation.error.issues
-            });
-            return;
-        }
-
-        const course = await courseService.updateCourse(id, validation.data);
-
-        if (!course) {
-            res.status(404).json({
-                message: "Course not found"
-            });
-            return;
-        }
-
-        res.status(200).json(course);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            message: "Failed to update course"
+    if (!mongoose.isValidObjectId(id)) {
+        res.status(400).json({
+            message: "Invalid course ID"
         });
+        return;
     }
+
+    const validation = courseSchema.safeParse(req.body);
+
+    if (!validation.success) {
+        res.status(400).json({
+            message: "Validation failed",
+            errors: validation.error.issues
+        });
+        return;
+    }
+
+    const course = await courseService.updateCourse(id, validation.data);
+
+    res.status(200).json(course);
 };
 
 // DELETE /api/courses/:id
@@ -289,32 +247,18 @@ export const updateCourse = async (req: Request, res: Response): Promise<void> =
  *         description: Internal server error
  */
 export const deleteCourse = async (req: Request, res: Response): Promise<void> => {
-    try {
-               const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
+    const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
 
-        if (!mongoose.isValidObjectId(id)) {
-            res.status(400).json({
-                message: "Invalid course ID"
-            });
-            return;
-        }
-
-                const course = await courseService.deleteCourse(id);
-
-        if (!course) {
-            res.status(404).json({
-                message: "Course not found"
-            });
-            return;
-        }
-
-        res.status(200).json({
-            message: "Course deleted successfully"
+    if (!mongoose.isValidObjectId(id)) {
+        res.status(400).json({
+            message: "Invalid course ID"
         });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            message: "Failed to delete course"
-        });
+        return;
     }
+
+    await courseService.deleteCourse(id);
+
+    res.status(200).json({
+        message: "Course deleted successfully"
+    });
 };

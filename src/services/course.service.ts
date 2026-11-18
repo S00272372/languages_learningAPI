@@ -1,4 +1,5 @@
 import Course, { ICourse } from '../models/course.model';
+import { NotFoundError } from '../apperrors';
 import { CourseInput } from '../schemas/course.schema';
 
 export class CourseService {
@@ -16,8 +17,12 @@ export class CourseService {
     return await Course.find(filter).sort({ createdAt: -1 });
   }
 
-  async getCourseById(id: string): Promise<ICourse | null> {
-    return await Course.findById(id);
+  async getCourseById(id: string): Promise<ICourse> {
+    const course = await Course.findById(id);
+
+    if (!course) throw new NotFoundError('Course');
+
+    return course;
   }
 
   async createCourse(courseData: CourseInput): Promise<ICourse> {
@@ -25,14 +30,20 @@ export class CourseService {
     return await course.save();
   }
 
-  async updateCourse(id: string, courseData: CourseInput): Promise<ICourse | null> {
-    return await Course.findByIdAndUpdate(id, courseData, {
+  async updateCourse(id: string, courseData: CourseInput): Promise<ICourse> {
+    const course = await Course.findByIdAndUpdate(id, courseData, {
       returnDocument: "after",
       runValidators: true
     });
+
+    if (!course) throw new NotFoundError('Course');
+
+    return course;
   }
 
-  async deleteCourse(id: string): Promise<ICourse | null> {
-    return await Course.findByIdAndDelete(id);
+  async deleteCourse(id: string): Promise<void> {
+    const course = await Course.findByIdAndDelete(id);
+
+    if (!course) throw new NotFoundError('Course');
   }
 }
