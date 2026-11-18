@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
 import mongoose from "mongoose";
-import Lesson from "../models/lesson.model";
+import { LessonService } from "../services/lesson.service";
 import Course from "../models/course.model";
 import { lessonSchema } from "../schemas/lesson.schema";
 
+const lessonService = new LessonService();
 // GET /api/lessons
 /**
  * @openapi
@@ -34,21 +35,16 @@ export const getLessons = async (
     try {
         const { courseId } = req.query;
 
-        const filter: Record<string, mongoose.Types.ObjectId> = {};
-
-        if (typeof courseId === "string") {
-            if (!mongoose.isValidObjectId(courseId)) {
-                res.status(400).json({
-                    message: "Invalid course ID"
-                });
-                return;
-            }
-
-            filter.courseId = new mongoose.Types.ObjectId(courseId);
+                if (typeof courseId === "string" && !mongoose.isValidObjectId(courseId)) {
+            res.status(400).json({
+                message: "Invalid course ID"
+            });
+            return;
         }
 
-        const lessons = await Lesson.find(filter)
-            .sort({ createdAt: -1 });
+        const lessons = await lessonService.getAllLessons(
+            typeof courseId === "string" ? courseId : undefined
+        );
 
         res.status(200).json(lessons);
     } catch (error) {
@@ -91,7 +87,7 @@ export const getLessonById = async (
     res: Response
 ): Promise<void> => {
     try {
-        const { id } = req.params;
+        const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
 
         if (!mongoose.isValidObjectId(id)) {
             res.status(400).json({
@@ -100,7 +96,7 @@ export const getLessonById = async (
             return;
         }
 
-        const lesson = await Lesson.findById(id);
+        const lesson = await lessonService.getLessonById(id);
 
         if (!lesson) {
             res.status(404).json({
@@ -182,10 +178,7 @@ export const createLesson = async (
             return;
         }
 
-        const lesson = await Lesson.create({
-            ...validation.data,
-            courseId: new mongoose.Types.ObjectId(validation.data.courseId)
-        });
+            const lesson = await lessonService.createLesson(validation.data);
 
         res.status(201).json(lesson);
     } catch (error) {
@@ -248,7 +241,7 @@ export const updateLesson = async (
     res: Response
 ): Promise<void> => {
     try {
-        const { id } = req.params;
+        const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
 
         if (!mongoose.isValidObjectId(id)) {
             res.status(400).json({
@@ -276,17 +269,7 @@ export const updateLesson = async (
             return;
         }
 
-        const lesson = await Lesson.findByIdAndUpdate(
-            id,
-            {
-                ...validation.data,
-                courseId: new mongoose.Types.ObjectId(validation.data.courseId)
-            },
-            {
-                returnDocument: "after",
-                runValidators: true
-            }
-        );
+            const lesson = await lessonService.updateLesson(id, validation.data);
 
         if (!lesson) {
             res.status(404).json({
@@ -336,7 +319,7 @@ export const deleteLesson = async (
     res: Response
 ): Promise<void> => {
     try {
-        const { id } = req.params;
+        const id = Array.isArray(req.params.id) ? req.params.id[0] : req.params.id;
 
         if (!mongoose.isValidObjectId(id)) {
             res.status(400).json({
@@ -345,7 +328,7 @@ export const deleteLesson = async (
             return;
         }
 
-        const lesson = await Lesson.findByIdAndDelete(id);
+        const lesson = await lessonService.deleteLesson(id);
 
         if (!lesson) {
             res.status(404).json({
