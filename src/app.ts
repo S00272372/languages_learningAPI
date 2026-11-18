@@ -5,8 +5,10 @@ import "dotenv/config";
 import courseRoutes from "./routes/course.routes";
 import lessonRoutes from "./routes/lesson.routes";
 import { errorHandler } from "./middleware/error.middleware";
+import cors from "cors";
 
 const app: Application = express();
+app.use(cors());
 
 app.use(express.json());
 
